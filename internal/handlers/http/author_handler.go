@@ -18,7 +18,7 @@ func NewAuthorHandler(authorService ports.IAuthorService) *AuthorHandler {
 	return &AuthorHandler{authorService}
 }
 
-func (h *AuthorHandler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
+func (a *AuthorHandler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 	var author domain.Author
 	err := json.NewDecoder(r.Body).Decode(&author)
 	if err != nil {
@@ -26,7 +26,7 @@ func (h *AuthorHandler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.authorService.CreateAuthor(author)
+	err = a.authorService.CreateAuthor(author)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
