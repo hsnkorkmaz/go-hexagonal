@@ -23,13 +23,13 @@ func main() {
 	}
 
 	sqlRepository := mssql.NewMssql(sqlCon)
-	//bookService := services.NewBookService(sqlRepository)
+	bookService := services.NewBookService(sqlRepository)
 	authorService := services.NewAuthorService(sqlRepository)
 	authorHandler := httpH.NewAuthorHandler(authorService)
+	bookHandler := httpH.NewBookHandler(bookService)
 
 	//http handlers
 	router := mux.NewRouter()
-
 	router.HandleFunc("/", nil).Methods("GET")
 
 	//author handlers
@@ -40,7 +40,12 @@ func main() {
 	router.HandleFunc("/authors/{id:[0-9]+}", authorHandler.DeleteAuthor).Methods("DELETE")
 
 	// book handlers
-	
+	router.HandleFunc("/books", bookHandler.GetBooks).Methods("GET")
+	router.HandleFunc("/books", bookHandler.CreateBook).Methods("POST")
+	router.HandleFunc("/books/{id:[0-9]+}", bookHandler.GetBook).Methods("GET")
+	router.HandleFunc("/books/{id:[0-9]+}", bookHandler.UpdateBook).Methods("PUT")
+	router.HandleFunc("/books/{id:[0-9]+}", bookHandler.DeleteBook).Methods("DELETE")
+
 	http.ListenAndServe(":8080", router)
 
 }
