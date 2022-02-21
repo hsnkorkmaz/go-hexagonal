@@ -13,4 +13,4 @@
 
 # Dependency directories
 vendor/
-config/local/mssql.go
+config/local/config.go
