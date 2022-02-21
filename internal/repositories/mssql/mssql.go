@@ -13,6 +13,7 @@ func NewMssql(db *sql.DB) *mssql {
 	return &mssql{db}
 }
 
+//internal functions
 func (sql *mssql) sqlQuery(query string, args ...interface{}) (*sql.Rows, error) {
 	rows, err := sql.db.Query(query, args...)
 	if err != nil {
@@ -29,6 +30,7 @@ func (sql *mssql) sqlExec(query string, args ...interface{}) (sql.Result, error)
 	return result, nil
 }
 
+//books
 func (sql *mssql) CreateBook(book domain.Book) error {
 	query := `INSERT INTO books (name, author_id) VALUES (?, ?)`
 	_, err := sql.sqlExec(query, book.Name, book.Author.Id)
@@ -94,7 +96,7 @@ func (sql *mssql) DeleteBook(id int64) error {
 	return nil
 }
 
-//books
+//authors
 func (sql *mssql) CreateAuthor(author domain.Author) error {
 	query := `INSERT INTO authors (name) VALUES (?)`
 	_, err := sql.sqlExec(query, author.Name)
