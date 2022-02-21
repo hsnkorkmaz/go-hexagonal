@@ -5,7 +5,6 @@ Project Structure
 ```bash
 
 │   .gitignore
-│   go-hexagonal.exe
 │   go.mod
 │   go.sum
 │   main.go
