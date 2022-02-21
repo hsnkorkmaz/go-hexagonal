@@ -18,19 +18,21 @@ func main() {
 	// get sql connection
 	sqlCon, err := openSqlConnection(local.SQL_USER, local.SQL_PASSWORD, local.SQL_SERVER, local.SQL_PORT, local.SQL_DATABASE)
 	if err != nil {
-		fmt.Println(err)
-		return
+		panic(err)
 	}
 
-	sqlRepository := mssql.NewMssql(sqlCon)
-	bookService := services.NewBookService(sqlRepository)
-	authorService := services.NewAuthorService(sqlRepository)
+	bookRepository := mssql.NewBookMssql(sqlCon)
+	authorRepository := mssql.NewAuthorMssql(sqlCon)
+	bookService := services.NewBookService(bookRepository)
+	authorService := services.NewAuthorService(authorRepository)
 	authorHandler := httpH.NewAuthorHandler(authorService)
 	bookHandler := httpH.NewBookHandler(bookService)
 
 	//http handlers
 	router := mux.NewRouter()
-	router.HandleFunc("/", nil).Methods("GET")
+	router.HandleFunc("/", func(rw http.ResponseWriter, r *http.Request) {
+		rw.Write([]byte("Api is running"))
+	})
 
 	//author handlers
 	router.HandleFunc("/authors", authorHandler.GetAuthors).Methods("GET")
@@ -47,7 +49,6 @@ func main() {
 	router.HandleFunc("/books/{id:[0-9]+}", bookHandler.DeleteBook).Methods("DELETE")
 
 	http.ListenAndServe(":8080", router)
-
 }
 
 func openSqlConnection(sqlUser string, sqlPassword string, sqlServer string, sqlPort string, sqlDatabase string) (*sql.DB, error) {
