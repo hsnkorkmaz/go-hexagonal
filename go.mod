@@ -2,7 +2,10 @@ module github.com/hsnkorkmaz/go-hexagonal
 
 go 1.17
 
-require github.com/denisenkom/go-mssqldb v0.12.0
+require (
+	github.com/denisenkom/go-mssqldb v0.12.0
+	github.com/gorilla/mux v1.8.0
+)
 
 require (
 	github.com/golang-sql/civil v0.0.0-20190719163853-cb61b32ac6fe // indirect
