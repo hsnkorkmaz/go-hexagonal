@@ -3,7 +3,6 @@
 
 Project Structure
 ```bash
-
 │   .gitignore
 │   go.mod
 │   go.sum
@@ -45,6 +44,10 @@ Project Structure
     │           author_handler.go
     │           book_handler.go
     │
+    ├───middleware
+    │       azure_ad_middleware.go
+    │       role_based_access_control.go
+    │
     └───repositories
         ├───mongo
         ├───mssql
@@ -52,4 +55,6 @@ Project Structure
         │       book_mssql.go
         │
         └───postgres
+                author_postgres.go
+                book_postgres.go
 ```
