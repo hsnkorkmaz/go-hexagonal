@@ -12,6 +12,7 @@ import (
 	httpH "github.com/hsnkorkmaz/go-hexagonal/internal/handlers/http"
 	"github.com/hsnkorkmaz/go-hexagonal/internal/middleware"
 	"github.com/hsnkorkmaz/go-hexagonal/internal/repositories/mssql"
+	_ "github.com/lib/pq"
 )
 
 //http
@@ -19,6 +20,7 @@ func main() {
 
 	// get sql connection
 	sqlCon, err := openSqlConnection(local.SQL_USER, local.SQL_PASSWORD, local.SQL_SERVER, local.SQL_PORT, local.SQL_DATABASE)
+	//pgCon, err := openPostgresConnection(local.POSTGRES_USER, local.POSTGRES_PASSWORD, local.POSTGRES_SERVER, local.POSTGRES_PORT, local.POSTGRES_DATABASE)
 	if err != nil {
 		panic(err)
 	}
@@ -57,7 +59,6 @@ func main() {
 	router.HandleFunc("/books/{id:[0-9]+}", bookHandler.DeleteBook).Methods("DELETE")
 
 	http.ListenAndServe(":8080", router)
-
 }
 
 func openSqlConnection(sqlUser string, sqlPassword string, sqlServer string, sqlPort string, sqlDatabase string) (*sql.DB, error) {
@@ -69,6 +70,17 @@ func openSqlConnection(sqlUser string, sqlPassword string, sqlServer string, sql
 		return nil, err
 	}
 	return SQL_DB, nil
+}
+
+func openPostgresConnection(pgUser string, pgPassword string, pgServer string, pgPort string, pgDatabase string) (*sql.DB, error) {
+	connectionString := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+		pgServer, pgPort, pgUser, pgPassword, pgDatabase)
+
+	PG_DB, err := sql.Open("postgres", connectionString)
+	if err != nil {
+		return nil, err
+	}
+	return PG_DB, nil
 }
 
 func getADB2CKeysUrl(tenant string, policy string) string {
